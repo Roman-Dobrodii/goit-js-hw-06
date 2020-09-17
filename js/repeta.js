@@ -1,365 +1,570 @@
 /*
- * Прототип объекта
- *
- * - https://miro.com/app/board/o9J_ku0WE0g=/
- * - Object.create()
- * - [[Prototype]] и __proto__
- * - Object.getPrototypeOf()
- * - Собственные свойства и Object.prototype.hasOwnProperty()
- * - Цепочка прототипов
+ * Array.prototype.forEach(callback(currentValue, index, array), thisArg)
+ * - Поэлементо перебирает оригинальный массив
+ * - Ничего не возвращает
+ * - Заменяет классический for, если не нужно прерывать цикл
  */
 
-// const objC = {
-//   z: 5,
-// };
+const numbers = [5, 10, 15, 20, 25];
 
-// const objB = Object.create(objC);
-// objB.y = 2;
+numbers.forEach(function (number) {
+  console.log('number', number);
+});
 
-// const objA = Object.create(objB);
-// objA.x = 1;
+console.log(numbers);
+/*
+ * Array.prototype.map()
+ * - Поэлементо перебирает оригинальный массив
+ * - Не изменяет оригинальный массив
+ * - Возвращает новый массив такой же длины
+ */
 
-// console.log(objA.z);
+const numbers = [5, 10, 15, 20, 25];
 
-// console.log('objA', objA);
+const doubledNums = numbers.map(number => {
+  return number * 3;
+});
+// console.log('numbers', numbers);
+// console.log('doubledNums', doubledNums);
 
-// console.log(objA.hasOwnProperty('x'));
-
-// const dummyObj = Object.create({ message: 'Это свойство объекта протортипа' });
-// dummyObj.message = 'Это собственное свойство объекта';
-// console.log('dummyObj', dummyObj);
-
-// console.log(dummyObj.message);
-
-//  'Это собственное свойство объекта'
-//  'Это свойство на объекте-прототипе'
+const players = [
+  { id: 'player-1', name: 'Mango', timePlayed: 310, points: 54, online: false },
+  { id: 'player-2', name: 'Poly', timePlayed: 470, points: 92, online: true },
+  { id: 'player-3', name: 'Kiwi', timePlayed: 230, points: 48, online: true },
+  { id: 'player-4', name: 'Ajax', timePlayed: 150, points: 71, online: false },
+  { id: 'player-5', name: 'Chelsy', timePlayed: 80, points: 48, online: true },
+];
+console.table(players);
 
 /*
- * Алгоритм поиска свойства в цепочке прототипов:
- * 1. Поиск начинается в собственных свойствах
- * 2. Если свойства нет в сообственных, поиск переходит к цепочке прототипов
- * 3. Поиск прекращается при первом совпадении (есть такое свойство)
- * 4. Возвращается значение свойства
+ * Получаем массив имён всех игроков
  */
 
-// const objA = Object.create({ z: 5 });
-// objA.y = 100;
-// console.log('objA', objA);
+const playerNames = players.map(player => player.name);
+// console.log('playerNames', playerNames);
 
-// console.log(objA.x);
+const playerIds = players.map(player => player.id);
+// console.log('playerIds', playerIds);
+
+// const res = players.map(({ name, online }) => ({ name, online }));
+// console.log('res', res);
 
 /*
- * Основы ООП: класс, экземпляр (объект), интерфейс
+ * Увеличиваем кол-во поинтов каждого игрока на 10%
  */
+
+const upatedPlayers = players.map(player => ({
+  ...player,
+  points: player.points * 1.1,
+}));
+
+// console.table(upatedPlayers);
+// console.log(upatedPlayers);
 
 /*
- * Функции-конструкторы
- * - Именование
- * - Оператор new
- * - Свойство Function.prototype
+ * Увеличиваем кол-во часов игрока по id
  */
 
-const Car = function ({ brand, model, price } = {}) {
-  // const { brand, model, price } = config;
-  // 2. Функция вызывается в контексте созданного объекта,
-  //    то есть в this записывается ссылка на него
-  this.brand = brand;
-  this.model = model;
-  this.price = price;
+const playerIdToUpdate = 'player-3';
 
-  // 3. В свойство this.__proto__ записывается ссылка на обьект Car.prototype
-  //    тоесть Car.prototype это ПРОТОТИП будущего обьекта (экземпляра)
+const updatedPlayers = players.map(player => {
+  if (playerIdToUpdate === player.id) {
+    return {
+      ...player,
+      timePlayed: player.timePlayed + 100,
+    };
+  }
 
-  // 4. Ссылка на обьект возвращается в место вызова new Car
+  return player;
+});
+
+// const updatedPlayers = players.map(player =>
+//   playerIdToUpdate === player.id
+//     ? { ...player, timePlayed: player.timePlayed + 100 }
+//     : player,
+// );
+// console.table(updatedPlayers);
+/*
+ * Array.prototype.filter()
+ * - Поэлементо перебирает оригинальный массив
+ * - Возвращает новый массив (с элементами или пустой)
+ * - Добавляет в возвращаемый массив элементы которые удовлетворяют условию коллбек-функции
+ *    - если коллбек вернул true элемент добавляется в возвращаемый массив
+ *    - если коллбек вернул false элемент НЕ добавляется в возвращаемый массив
+ */
+
+const numbers = [5, 10, 15, 20, 25];
+
+const filteredNumbers = numbers.filter(number => number < 10 || number > 20);
+// console.log(filteredNumbers);
+
+const players = [
+  { id: 'player-1', name: 'Mango', timePlayed: 310, points: 54, online: false },
+  { id: 'player-2', name: 'Poly', timePlayed: 470, points: 92, online: true },
+  { id: 'player-3', name: 'Kiwi', timePlayed: 230, points: 48, online: true },
+  { id: 'player-4', name: 'Ajax', timePlayed: 150, points: 71, online: false },
+  { id: 'player-5', name: 'Chelsy', timePlayed: 280, points: 48, online: true },
+];
+
+/*
+ * Получаем массив всех онлайн игроков
+ */
+
+const onlinePlayers = players.filter(({ online }) => online);
+// console.table(onlinePlayers);
+
+/*
+ * Получаем массив всех оффлайн игроков
+ */
+
+const offlinePlayers = players.filter(player => !player.online);
+// console.table(offlinePlayers);
+
+/*
+ * Получаем список хардкорных игроков с временем больше 250
+ */
+
+const hardcorePlayers = players.filter(player => player.timePlayed > 250);
+// console.table(hardcorePlayers);
+/*
+ * Array.prototype.find()
+ * - Поэлементо перебирает оригинальный массив
+ * - Возвращает первый элемент удовлетворяющий условию или undefined
+ */
+
+const numbers = [5, 10, 15, 20, 25];
+
+const number = numbers.find(number => number === 10);
+// console.log(number);
+
+const players = [
+  { id: 'player-1', name: 'Mango', timePlayed: 310, points: 54, online: false },
+  { id: 'player-2', name: 'Poly', timePlayed: 470, points: 92, online: true },
+  { id: 'player-3', name: 'Kiwi', timePlayed: 230, points: 48, online: true },
+  { id: 'player-4', name: 'Ajax', timePlayed: 150, points: 71, online: false },
+  { id: 'player-5', name: 'Chelsy', timePlayed: 280, points: 48, online: true },
+];
+
+/*
+ * Ищем игрока по id
+ */
+const playerIdToFind = 'player-3';
+const playerWithId = players.find(({ id }) => id === playerIdToFind);
+// console.log(playerWithId);
+
+const finPlayerById = (allPlayer, playerId) => {
+  return allPlayer.find(({ id }) => id === playerId);
 };
 
-Car.prototype.sayHi = function () {
-  console.log('Car.prototype.sayHi -> this', this);
-  console.log('Hello :) ');
+// console.log(finPlayerById(players, 'player-1'));
+// console.log(finPlayerById(players, 'player-4'));
+
+/*
+ * Ищем игрока по имени
+ */
+const playerNameToFind = 'Poly';
+const playerWithName = players.find(player => player.name === playerNameToFind);
+// console.log(playerWithName);
+const players = [
+  { id: 'player-1', name: 'Mango', timePlayed: 310, points: 54, online: true },
+  { id: 'player-2', name: 'Poly', timePlayed: 470, points: 92, online: false },
+  { id: 'player-3', name: 'Kiwi', timePlayed: 230, points: 48, online: true },
+  { id: 'player-4', name: 'Ajax', timePlayed: 150, points: 71, online: false },
+  { id: 'player-5', name: 'Chelsy', timePlayed: 280, points: 48, online: true },
+];
+
+/*
+ * Array.prototype.every()
+ * - Поэлементо перебирает оригинальный массив
+ * - Возвращает true если все элементы массива удовлетворяют условию
+ */
+
+const isAllOnline = players.every(player => player.online);
+// console.log('isAllOnline: ', isAllOnline);
+
+/*
+ * Array.prototype.some()
+ * - Поэлементо перебирает оригинальный массив
+ * - Возвращает true если хотя бы один элемент массива удовлетворяет условию
+ */
+const isAnyOnline = players.some(player => player.online);
+console.log('isAnyOnline: ', isAnyOnline);
+
+const anyHardcorePlayers = players.some(player => player.timePlayed > 400);
+console.log('anyHardcorePlayers: ', anyHardcorePlayers);
+/*
+ * Array.prototype.reduce()
+ * - Поэлементо перебирает оригинальный массив
+ * - Возвращает что угодно 🤯
+ * - Заменяет всё на свете, но использовать нужно с умом
+ */
+
+const numbers = [5, 10, 15, 20, 25];
+
+const total = numbers.reduce((acc, number) => acc + number, 0);
+// console.log(total);
+
+// accumulator = 0 -> number = 5 -> return 0 + 5
+// accumulator = 5 -> number = 10 -> return 5 + 10
+// accumulator = 15 -> number = 15 -> return 15 + 15
+// accumulator = 30 -> number = 20 -> return 30 + 20
+// accumulator = 50 -> number = 25 -> return 50 + 25
+
+/*
+ * Считаем общую зарплату
+ */
+
+const salary = {
+  mango: 100,
+  poly: 50,
+  ajax: 150,
 };
 
-Car.prototype.changePrice = function (newPrice) {
-  this.price = newPrice;
-};
+const totalSalary = Object.values(salary).reduce(
+  (total, value) => total + value,
+  0,
+);
+// console.log(totalSalary);
 
-// console.log(Car.prototype);
+/*
+ * Считаем общее количество часов
+ */
 
-// 1. Если функция вызывается через new, создаётся пустой объект
-// const myCar = new Car({
-//   brand: 'Audi',
-//   model: 'Q3',
-//   price: 35000,
+const players = [
+  { id: 'player-1', name: 'Mango', timePlayed: 310, online: false },
+  { id: 'player-2', name: 'Poly', timePlayed: 470, online: true },
+  { id: 'player-3', name: 'Kiwi', timePlayed: 230, online: true },
+  { id: 'player-4', name: 'Ajax', timePlayed: 150, online: false },
+  { id: 'player-5', name: 'Chelsey', timePlayed: 80, online: true },
+];
+
+const totalTimePlayed = players.reduce(
+  (totalTime, player) => totalTime + player.timePlayed,
+  0,
+);
+
+// console.log(totalTimePlayed);
+
+/*
+ * Считаем общую сумму товаров корзины
+ */
+const cart = [
+  { label: 'Apples', price: 100, quantity: 2 },
+  { label: 'Bananas', price: 120, quantity: 3 },
+  { label: 'Lemons', price: 70, quantity: 4 },
+];
+
+const totalAmount = cart.reduce(
+  (total, { price, quantity }) => total + price * quantity,
+  0,
+);
+
+// console.log(totalAmount);
+
+/*
+ * Собираем все теги из твитов
+ */
+const tweets = [
+  { id: '000', likes: 5, tags: ['js', 'nodejs'] },
+  { id: '001', likes: 2, tags: ['html', 'css'] },
+  { id: '002', likes: 17, tags: ['html', 'js', 'nodejs'] },
+  { id: '003', likes: 8, tags: ['css', 'react'] },
+  { id: '004', likes: 0, tags: ['js', 'nodejs', 'react'] },
+];
+
+const allTags = tweets.reduce((acc, tweet) => [...acc, ...tweet.tags], []);
+console.log(allTags);
+
+// acc = [], tweet.tags = ['js', 'nodejs'] return [...[], ...['js', 'nodejs']]
+// acc = ['js', 'nodejs'] tweet.tags ['html', 'css']
+// return  [...['js', 'nodejs'], ...['html', 'css']]
+//  ['js', 'nodejs', 'html', 'css']
+
+/*
+ * Ведём статистику тегов
+ */
+// const tagsStats = allTags.reduce((acc, tag) => {
+//   console.log(acc);
+
+//   if (acc[tag]) {
+//     acc[tag] += 1;
+
+//     return acc;
+//   }
+
+//   acc[tag] = 1;
+
+//   return acc;
+// }, {});
+
+const tagsStats = allTags.reduce((acc, tag) => {
+  return {
+    ...acc,
+    [tag]: acc[tag] ? acc[tag] + 1 : 1,
+  };
+}, {});
+// console.log(tagsStats);
+
+// если свойство с ключом tag есть. увеличить его значение на 1
+// если свойствоства нет с таким ключом что в tag, сделать и записать 1
+/*
+ * Array.prototype.sort(callback(currentEl, nextEl){})
+ * - Сортирует и ИЗМЕНЯЕТ оригинальный массив
+ * - По умолчанию:
+ *    - сортирует по возрастанию
+ *    - приводит элементы к строке и сортирует по [Unicode](https://unicode-table.com/en/)
+ */
+
+const numbers = [1, 9, 6, 2, 3];
+// numbers.sort();
+// console.log('numbers', numbers);
+
+const letters = ['b', 'B', 'a', 'A'];
+// letters.sort();
+// console.log('letters', letters);
+
+/*
+ * compareFunction - функция сравнения (callback)
+ * Элементы массива сортируются в соответствии с её возвращаемым значением
+ *  - eсли compareFunction(A, B) меньше 0, сортировка поставит A перед B
+ *  - если compareFunction(A, B) больше 0, сортировка поставит B перед A
+ *  - если compareFunction(A, B) вернёт 0, сортировка оставит A и B на неизменными по отношению друг к другу, но отсортирует их по отношению ко всем другим элементам.
+ */
+
+// numbers.sort((curEl, nextEl) => {
+//     return nextEl - curEl;
 // });
-// console.log(myCar);
-
-// myCar.sayHi();
-// myCar.changePrice(10000);
-
-// const myCar2 = new Car({ brand: 'BMW', model: 'X6', price: 50000 });
-// console.log(myCar2);
-
-// myCar2.sayHi();
-
-// const myCar3 = new Car({ brand: 'Audi', model: 'A6', price: 65000 });
-// console.log(myCar3);
-
-// myCar3.sayHi();
-
-const User = function ({ email, password } = {}) {
-  this.email = email;
-  this.password = password;
-};
-
-console.log(User.prototype);
-
-User.prototype.changeEmail = function (newMail) {
-  this.email = newMail;
-};
-
-const mango = new User({ email: 'mango@mail.com', password: 1111111 });
-
-mango.changeEmail('my-new-mail@mail.com');
-// console.log(mango);
 
 /*
- * Статические свойства и методы
- * - Статические свойства и методы доступны только на самом конструкторе
- * - В статических методах не нужен this
+ * Как сделать копию массива чтобы не сортировать оригинальный
+ * - Array.prototype.slice()
+ * - Операция spread
  */
 
-User.message =
-  'Я статическое свойство, меня нет на экземплярах или в прототипе.';
-
-User.logInfo = function (obj) {
-  console.log('User.logInfo -> obj', obj);
-  console.log('Почта: ', obj.email);
-  console.log('Пароль: ', obj.password);
-};
-
-User.logInfo(mango);
-
-// Object.keys()
-// Object.value()
-
-// 1. У каждого обьекта есть свойство __proto__
-// 2. В этом свойстве лежит ссылка на его ПРОТОТИП, то есть другой обьект
-// 3. При создании литера обьекта, в свойство __proto__ записывается ссылка на Функция.prototype
-// 4. Функция-конструктор это просто функция :)
-// 5. Всю магию делает оператор new
-// 6. Если функция вызывается через new, создаётся пустой объект
-// 7. Функция вызывается в контексте созданного объекта
-// 8. В свойство this.__proto__ записывается ссылка на обьект Функция.prototype
-// 9. Ссылка на обьект возвращается в место вызова new Фунукция()
-
-const CounterPlugin = function ({
-  rootSelector,
-  initialValue = 0,
-  step = 1,
-  onUpdate = () => null,
-} = {}) {
-  this._value = initialValue;
-  this._step = step;
-  this._refs = this._getRefs(rootSelector);
-
-  this.onUpdate = onUpdate;
-
-  this._bindEvents();
-  this.updateValueUI();
-};
-
-CounterPlugin.prototype._getRefs = function (rootSelector) {
-  const refs = {};
-  refs.container = document.querySelector(rootSelector);
-  refs.incrementBtn = refs.container.querySelector('[data-increment]');
-  refs.decrementBtn = refs.container.querySelector('[data-decrement]');
-  refs.value = refs.container.querySelector('[data-value]');
-
-  return refs;
-};
-
-CounterPlugin.prototype._bindEvents = function () {
-  this._refs.incrementBtn.addEventListener('click', () => {
-    console.log('CounterPlugin.prototype._bindEvents -> this', this);
-    this.increment();
-    this.updateValueUI();
-  });
-
-  this._refs.decrementBtn.addEventListener('click', () => {
-    console.log('CounterPlugin.prototype._bindEvents -> this', this);
-    this.decrement();
-    this.updateValueUI();
-  });
-};
-
-CounterPlugin.prototype.updateValueUI = function () {
-  this._refs.value.textContent = this._value;
-
-  this.onUpdate();
-};
-
-CounterPlugin.prototype.increment = function () {
-  this._value += this._step;
-};
-
-CounterPlugin.prototype.decrement = function () {
-  this._value -= this._step;
-};
-
-new CounterPlugin({
-  rootSelector: '#counter-1',
-  step: 10,
-  initialValue: 100,
-  onUpdate: () => console.log('Это мой кастомный колбек для onUpdate'),
-});
-
-new CounterPlugin({ rootSelector: '#counter-2', step: 2 });
+const descSortedNumbers = [...numbers].sort((a, b) => b - a);
+const ascSortedNumbers = [...numbers].sort((a, b) => a - b);
+// console.log('descSortedNumbers', descSortedNumbers);
+// console.log('ascSortedNumbers', ascSortedNumbers);
 
 /*
- * Классы
- * 🐷 - объявление
- * 🐷 - конструктор
- * 🐷 - методы
- * 🐷 - static
- * 🐷 - приватные свойства
- * 🐷 - синтаксис публичных свойства и методы классов
- * 🐷 - геттеры и сеттеры
+ * Кастомная сортировка сложных типов
  */
+const players = [
+  { id: 'player-1', name: 'Mango', timePlayed: 310, online: false },
+  { id: 'player-2', name: 'Poly', timePlayed: 470, online: true },
+  { id: 'player-3', name: 'Aiwi', timePlayed: 230, online: true },
+  { id: 'player-4', name: 'Ajax', timePlayed: 150, online: false },
+  { id: 'player-5', name: 'Chelsey', timePlayed: 80, online: true },
+];
 
-class Car {
-  static description = 'Класс описывающий автомобиль';
+// По игровому времени
+const sortedByBestPlayers = [...players].sort(
+  (prevPlayer, nextPlayer) => nextPlayer.timePlayed - prevPlayer.timePlayed,
+);
+// console.table(sortedByBestPlayers);
 
-  static logInfo(carObj) {
-    console.log('Car.logInfo -> carObj', carObj);
+const sortedByWorstPlayers = [...players].sort(
+  (prevPlayer, nextPlayer) => prevPlayer.timePlayed - nextPlayer.timePlayed,
+);
+// console.table(sortedByWorstPlayers);
+
+const byName = [...players].sort((a, b) => {
+  const result = a.name[0] > b.name[0];
+
+  if (result) {
+    return 1;
   }
 
-  constructor({ brand, model, price } = {}) {
-    this.brand = brand;
-    this._model = model;
-    this._price = price;
+  if (!result) {
+    return -1;
   }
-
-  get price() {
-    return this._price;
-  }
-
-  set price(newPrice) {
-    this._price = newPrice;
-  }
-
-  get model() {
-    return this._model;
-  }
-
-  set model(newModel) {
-    this._model = newModel;
-  }
-}
-
-const carInstance = new Car({
-  brand: 'Audi',
-  model: 'Q3',
-  price: 35000,
 });
 
-console.log(carInstance.model);
-carInstance.model = 'Q4';
-console.log(carInstance.model);
+console.table(byName);
+/*
+ * Array.prototype.flat(depth)
+ * - Разглаживает массив до указанной глубины
+ * - По умолчанию глубина 1
+ */
 
-console.log(carInstance.price);
-carInstance.price = 50000;
-console.log(carInstance.price);
-
-console.log(carInstance);
+const array = [1, 2, [4, [5]], [6, [7, 8, [9]]]];
+// console.log(array.flat(3));
 
 /*
- * Наследование
- *  - extends
- *  - super()
+ * Array.prototype.flatMap(callback)
+ * - Комбинация map + flat
  */
 
-class Hero {
-  constructor({ name = 'hero', xp = 0 } = {}) {
-    this.name = name;
-    this.xp = xp;
-  }
+const tweets = [
+  { id: '000', likes: 5, tags: ['js', 'nodejs'] },
+  { id: '001', likes: 2, tags: ['html', 'css'] },
+  { id: '002', likes: 17, tags: ['html', 'js', 'nodejs'] },
+  { id: '003', likes: 8, tags: ['css', 'react'] },
+  { id: '004', likes: 0, tags: ['js', 'nodejs', 'react'] },
+];
 
-  gainXp(amount) {
-    console.log(`${this.name} получает ${amount} опыта`);
-    this.xp += amount;
-  }
-}
+// const tags = tweets.flatMap(t => t.tags);
+// console.log(tags);
 
-class Warrior extends Hero {
-  constructor({ weapon, ...restProps } = {}) {
-    super(restProps);
+// const stats = tags.reduce((acc, tag) => {
+//     return {
+//         ...acc,
+//         [tag]: acc[tag] ? acc[tag] + 1 : 1,
+//     };
+// }, {});
 
-    this.weapon = weapon;
-  }
+const stats = tweets
+  .flatMap(tweet => tweet.tags)
+  .reduce(
+    (acc, tag) => ({
+      ...acc,
+      [tag]: acc[tag] ? acc[tag] + 1 : 1,
+    }),
+    {},
+  );
 
-  attack() {
-    console.log(`${this.name} атакует используя ${this.weapon}`);
-  }
-}
+console.log(stats);
+/*
+ * Цепочки вызовов - chaining
+ */
+const numbers = [1, 5, 2, 4, 3];
 
-class Berserk extends Warrior {
-  constructor({ warcry, ...restProps } = {}) {
-    super(restProps);
+// const greaterThenTwo = numbers.filter(num => num > 2);
+// console.log(greaterThenTwo);
 
-    this.warcry = warcry;
-  }
+// const multByThree = greaterThenTwo.map(num => num * 3);
+// console.log(multByThree);
 
-  babyRage() {
-    console.log(this.warcry);
-  }
-}
+// const sorted = multByThree.sort((a, b) => a - b);
+// console.log(sorted);
 
-const ajax = new Berserk({
-  name: 'ajax',
-  xp: 500,
-  weapon: 'axe',
-  warcry: 'waaaaaaaah',
-});
+// Цепочка предыдущих трёх
+const sorted = numbers
+  .filter(num => num > 2)
+  .map(num => num * 3)
+  .sort((a, b) => a - b);
 
-// console.log(ajax);
+console.log(sorted);
 
-// ajax.babyRage();
-// ajax.attack();
-// ajax.gainXp();
+/*
+ * Сортируем тех кто онлайн по рангу
+ * - сначала фильтруем
+ * - потом сортируем
+ */
+const players = [
+  { id: 'id-1', tag: 'Mango', isOnline: true, rank: 800 },
+  { id: 'id-2', tag: 'Poly', isOnline: false, rank: 600 },
+  { id: 'id-3', tag: 'Ajax', isOnline: true, rank: 100 },
+  { id: 'id-4', tag: 'Kiwi', isOnline: true, rank: 400 },
+  { id: 'id-5', tag: 'Chelsy', isOnline: false, rank: 200 },
+];
 
-class Mage extends Hero {
-  constructor({ spells, ...restProps } = {}) {
-    super(restProps);
+const onlineAndSorted = players
+  .filter(player => player.isOnline)
+  .sort((playerA, playerB) => playerA.rank - playerB.rank);
 
-    this.spells = spells;
-  }
+// console.table(onlineAndSorted);
 
-  cast() {
-    console.log(`${this.name} что-то там кастует 🧙‍♂️`);
-  }
-}
+/*
+ * Chaining в методах объекта как jquery
+ */
 
-// const mango = new Warrior({ name: 'mango', xp: 1000, weapon: 'алебарда' });
-// console.log(mango);
-// mango.attack();
-// mango.gainXp(1000);
+const element = {
+  class: '',
+  hovered: false,
+  changeClass(cls) {
+    this.class = cls;
 
-// const poly = new Mage({ name: 'poly', xp: 500, spells: ['фаербол'] });
-// console.log(poly);
-// poly.cast();
-// poly.gainXp(200);
+    return this;
+  },
+  toggleHovered() {
+    this.hovered = !this.hovered;
 
-// console.log(
-//     'mango.__proto__ === Warrior.prototype ',
-//     mango.__proto__ === Warrior.prototype,
-// );
-// // console.log(Object.getPrototypeOf(mango) === Warrior.prototype);
+    return this;
+  },
+};
 
-// console.log(
-//     'Warrior.prototype.__proto__ === Hero.prototype ',
-//     Warrior.prototype.__proto__ === Hero.prototype,
-// );
+element.toggleHovered().changeClass('open').toggleHovered();
+console.log(element);
+/*
+ * isEmpty()
+ */
 
-// console.log(
-//     'Hero.prototype.__proto__ === Object.prototype ',
-//     Hero.prototype.__proto__ === Object.prototype,
-// );
+// console.log(_.isEmpty({}));
+// console.log(_.isEmpty({ a: 1 }));
+
+/*
+ * get()
+ *
+ * - user && user.location && obj.location.city
+ * - user?.location?.city
+ */
+
+const user = {
+  name: 'mango',
+  location: {
+    city: 'Lviv',
+  },
+};
+
+// console.log(_.get(user, 'location.city'));
+
+// console.log(user.location.city);
+
+// if (user && user.location && user.location.city) {
+//     console.log(user.location.city);
+// }
+
+// console.log(user?.location?.city);
+
+/*
+ * union()
+ */
+
+// console.log(_.union([1, 2, 3], [3, 4, 5]));
+
+/*
+ * range()
+ */
+
+// console.log(_.range(10, 51));
+
+/*
+ * sortBy()
+ */
+
+/*
+ * sum() и sumBy()
+ */
+
+const players = [
+  { id: 'player-1', name: 'Mango', timePlayed: 310, online: false },
+  { id: 'player-2', name: 'Poly', timePlayed: 470, online: true },
+  { id: 'player-3', name: 'Aiwi', timePlayed: 230, online: true },
+  { id: 'player-4', name: 'Ajax', timePlayed: 150, online: false },
+  { id: 'player-5', name: 'Chelsey', timePlayed: 80, online: true },
+];
+
+// console.log(_.sumBy(players, player => player.timePlayed));
+
+/*
+ * uniq() и uniqBy()
+ * sortedUniq() и sortedUniqBy()
+ */
+
+/*
+ * random()
+ */
+
+/*
+ * min() и max()
+ * minBy() и maxBy()
+ */
+
+// console.log(_.minBy(players, player => player.timePlayed));
+
+/*
+ * camelCase(), capitalize(), kebabCase(), lowerCase(), upperCase()
+ */
+
+console.log(_.kebabCase(' a b c '));
